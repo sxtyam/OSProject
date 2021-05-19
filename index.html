@@ -7,67 +7,113 @@
   </head>
 
   <body>
-    <div>
-      <div>
-        Algorithm:
-        <form id="algorithm">
-          <input type="radio" name="algorithm" value="fcfs" checked />
-          FCFS<br />
-          <input type="radio" name="algorithm" value="sjf" /> SJF<br />
-          <input type="radio" name="algorithm" value="priority" /> Priority
-          scheduling<br />
-          <input type="radio" name="algorithm" value="robin" /> Round Robin
-        </form>
-        <br />
-      </div>
-      <table id="inputTable">
-        <tr>
-          <th>Process</th>
-          <th>Arrival Time</th>
-          <th>Execute Time</th>
-          <th class="servtime">Service Time</th>
-          <th class="priority-only">Priority</th>
-        </tr>
-        <tr>
-          <td>P0</td>
-          <td>0</td>
-          <td><input class="initial exectime" type="text" value="5" /></td>
-          <td class="servtime"></td>
-          <td class="priority-only initial"><input type="text" /></td>
-        </tr>
-        <tr>
-          <td>P1</td>
-          <td>1</td>
-          <td><input class="initial exectime" value="3" /></td>
-          <td class="servtime"></td>
-          <td class="priority-only"><input type="text" /></td>
-        </tr>
-      </table>
-      <input
-        id="minus"
-        style="display: inline; left: 428px; position: absolute; top: 170px"
-        type="button"
-        value="-"
-        onclick="deleteRow();"
-      />
-    </div>
-    <input type="button" value="+" onclick="addRow();" />
-    <div></div>
-    <p id="quantumParagraph" hidden>
-      Quantum:
-      <input style="width: 50px" id="quantum" type="text" value="3" />
-    </p>
-    <input type="button" value="Go" onclick="draw();" />
-    <br /><br />
+    <h1 class="navbar">CPU Scheduling Algorithms Visualizer</h1>
 
-    <fresh> </fresh>
-    <p>Timer: <strong id="timer"></strong> sec</p>
+    <div class="input-table-div">
+      <table id="inputTable">
+        <tbody>
+          <tr>
+            <th>Process</th>
+            <th>Arrival Time</th>
+            <th>Burst Time</th>
+            <th>Priority</th>
+          </tr>
+          <tr>
+            <td>P0</td>
+            <td>
+              <input
+                type="number"
+                value="0"
+                onchange="changeData(event, 'arrivalTime', 0)"
+              />
+            </td>
+            <td>
+              <input
+                type="number"
+                value="5"
+                onchange="changeData(event, 'burstTime', 0)"
+              />
+            </td>
+            <td>
+              <input
+                type="number"
+                value="0"
+                onchange="changeData(event, 'priority', 0)"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>P1</td>
+            <td>
+              <input
+                type="number"
+                value="3"
+                onchange="changeData(event, 'arrivalTime', 1)"
+              />
+            </td>
+            <td>
+              <input
+                type="number"
+                value="4"
+                onchange="changeData(event, 'burstTime', 1)"
+              />
+            </td>
+            <td>
+              <input
+                type="number"
+                value="0"
+                onchange="changeData(event, 'priority', 1)"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class='buttons'>
+      Time Quantum:
+      <input type="number" value="2" onchange="changeQuantum(event)" />
+      <br />
+      <button onclick="addRow()">Add Row</button>
+      <button onclick="deleteRow()" id="delete-row-button">
+        Remove Last Row
+      </button>
+      <br />
+      <button id="simulate-button" onclick="start(event)">Simulate</button>
+    </div>
+
+    <div class="output-divs fcfs-div">
+      <h3>First Come First Serve</h3>
+    </div>
+    <div class="output-divs sjf-div">
+      <h3>Shortest Job First</h3>
+    </div>
+    <div class="output-divs roundrobin-div">
+      <h3>Round Robin</h3>
+    </div>
+    <div class="output-divs priority-div">
+      <h3>Priority Scheduling</h3>
+    </div>
+
+    <div class='waiting-time-charts'>
+      <canvas id='waitingTimeChart'></canvas>
+      <canvas id="averageWaitingTimeChart"></canvas>
+    </div>
+
+    <div class='turn-around-time-charts'>
+      <canvas id='turnAroundTimeChart'></canvas>
+      <canvas id="averageTurnAroundTimeChart"></canvas>
+    </div>
+
+    <div>
+      <h3 id="suitable-algo">The most Suitable Algorithm for the given data is: </h3>
+    </div>
 
     <script
       src="https://code.jquery.com/jquery-3.6.0.min.js"
       integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js"></script>
     <script src="./index.js"></script>
   </body>
 </html>
