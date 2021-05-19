@@ -535,7 +535,7 @@ const createChart = () => {
       plugins: {
         title: {
           display: true,
-          text: "Miscellaneous Comparison",
+          text: "Turn Around Time",
           position: "bottom",
         },
       },
@@ -589,7 +589,7 @@ const createChart = () => {
       plugins: {
         title: {
           display: true,
-          text: "Miscellaneous Comparison",
+          text: "Waiting Time",
           position: "bottom",
         },
       },
