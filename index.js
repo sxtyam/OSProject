@@ -9,6 +9,7 @@ let processes = [
     remainingTime: 0,
     completionTime: 0,
     turnAroundTime: 0,
+    color: "rgba(250, 238, 147, 0.5)",
   },
   {
     id: 1,
@@ -20,6 +21,7 @@ let processes = [
     remainingTime: 0,
     completionTime: 0,
     turnAroundTime: 0,
+    color: "rgba(255, 143, 240, 0.5)",
   },
 ];
 
@@ -30,12 +32,21 @@ let fcfsArray,
   chartData,
   time_quantum = 2;
 
+function random_rgba() {
+  var o = Math.round,
+    r = Math.random,
+    s = 255;
+  return (
+    "rgba(" + o(r() * s) + "," + o(r() * s) + "," + o(r() * s) + "," + 0.5 + ")"
+  );
+}
+
 const fcfs = () => {
   fcfsArray = [...processes];
   for (let i = 0; i < processes.length; i++) fcfsArray[i] = { ...processes[i] };
   fcfsArray.sort((a, b) => a.arrivalTime - b.arrivalTime);
-  var processIds = "<th>Process</th>",
-    executionTime = "<th>Execution Time</th>";
+  var processIds = "<th style='background-color: #eee;'>Process</th>",
+    executionTime = "<th style='background-color: #eee;'>Execution Time</th>";
 
   for (let i = 0; i < fcfsArray.length; i++) {
     if (i > 0)
@@ -44,11 +55,13 @@ const fcfs = () => {
     else fcfsArray[0].startTime = 0;
     if (fcfsArray[i].startTime < fcfsArray[i].arrivalTime) {
       processIds +=
-        '<th style="height: 60px; width: ' +
+        '<th style="height: 60px; background-color: #eee; width: ' +
         (fcfsArray[i].arrivalTime - fcfsArray[i].startTime) * 20 +
         'px;">Idle</th>';
       executionTime +=
-        "<td>" + (fcfsArray[i].arrivalTime - fcfsArray[i].startTime) + "</td>";
+        "<td style='background-color: #eee;'>" +
+        (fcfsArray[i].arrivalTime - fcfsArray[i].startTime) +
+        "</td>";
       fcfsArray[i].startTime = fcfsArray[i].arrivalTime;
     }
     fcfsArray[i].waitingTime =
@@ -60,12 +73,19 @@ const fcfs = () => {
       fcfsArray[i].turnAroundTime + fcfsArray[i].arrivalTime;
 
     processIds +=
-      '<th style="height: 60px; width: ' +
+      '<th style="height: 60px; background-color: ' +
+      fcfsArray[i].color +
+      "; width: " +
       fcfsArray[i].burstTime * 20 +
       'px;">P' +
       fcfsArray[i].id +
       "</th>";
-    executionTime += "<td>" + fcfsArray[i].burstTime + "</td>";
+    executionTime +=
+      "<td style='background-color: " +
+      fcfsArray[i].color +
+      ";'>" +
+      fcfsArray[i].burstTime +
+      "</td>";
   }
 
   $(".fcfs-div").append(
@@ -92,8 +112,8 @@ const sjf = () => {
     sjfArray[0].completionTime - sjfArray[0].arrivalTime;
   sjfArray[0].waitingTime = sjfArray[0].turnAroundTime - sjfArray[0].burstTime;
 
-  var processIds = "<th>Process</th>",
-    executionTime = "<th>Execution Time</th>";
+  var processIds = "<th style='background-color: #eee;'>Process</th>",
+    executionTime = "<th style='background-color: #eee;'>Execution Time</th>";
 
   for (let i = 0; i < sjfArray.length; i++) {
     val = -1;
@@ -107,10 +127,13 @@ const sjf = () => {
     }
     if (val === -1) {
       processIds +=
-        '<th style="height: 60px; width: ' +
+        '<th style="height: 60px; background-color: #eee; width: ' +
         (sjfArray[i].arrivalTime - temp) * 20 +
         'px;">Idle</th>';
-      executionTime += "<td>" + (sjfArray[i].arrivalTime - temp) + "</td>";
+      executionTime +=
+        "<td style='background-color: #eee;'>" +
+        (sjfArray[i].arrivalTime - temp) +
+        "</td>";
       temp = sjfArray[i].arrivalTime;
       val = i;
     }
@@ -125,12 +148,19 @@ const sjf = () => {
     sjfArray[i] = temp2;
 
     processIds +=
-      '<th style="height: 60px; width: ' +
+      '<th style="height: 60px; background-color: ' +
+      sjfArray[i].color +
+      "; width: " +
       sjfArray[i].burstTime * 20 +
       'px;">P' +
       sjfArray[i].id +
       "</th>";
-    executionTime += "<td>" + sjfArray[i].burstTime + "</td>";
+    executionTime +=
+      "<td style='background-color: " +
+      sjfArray[i].color +
+      ";'>" +
+      sjfArray[i].burstTime +
+      "</td>";
   }
   $(".sjf-div").append(
     '<table class="result-table"><tr>' +
@@ -155,8 +185,8 @@ const roundRobin = () => {
     remain = n,
     count = 0;
 
-  var processIds = "<th>Process</th>",
-    executionTime = "<th>Execution Time</th>";
+  var processIds = "<th style='background-color: #eee;'>Process</th>",
+    executionTime = "<th style='background-color: #eee;'>Execution Time</th>";
 
   for (time = 0, i = 0; remain != 0; ) {
     if (count === n) {
@@ -171,11 +201,13 @@ const roundRobin = () => {
       }
       i = j;
       processIds +=
-        '<th style="height: 60px; width: ' +
+        '<th style="height: 60px; background-color: #eee; width: ' +
         (roundRobinArray[i].arrivalTime - time) * 20 +
         'px;">Idle</th>';
       executionTime +=
-        "<td>" + (roundRobinArray[i].arrivalTime - time) + "</td>";
+        "<td style='background-color: #eee;'>" +
+        (roundRobinArray[i].arrivalTime - time) +
+        "</td>";
       time = roundRobinArray[i].arrivalTime;
     }
     if (
@@ -191,12 +223,19 @@ const roundRobin = () => {
       count = 0;
       time += roundRobinArray[i].remainingTime;
       processIds +=
-        '<th style="height: 60px; width: ' +
+        '<th style="height: 60px; background-color: ' +
+        roundRobinArray[i].color +
+        "; width: " +
         roundRobinArray[i].remainingTime * 20 +
         'px;">P' +
         roundRobinArray[i].id +
         "</th>";
-      executionTime += "<td>" + roundRobinArray[i].remainingTime + "</td>";
+      executionTime +=
+        "<td style='background-color: " +
+        roundRobinArray[i].color +
+        ";'>" +
+        roundRobinArray[i].remainingTime +
+        "</td>";
       roundRobinArray[i].remainingTime = 0;
       remain--;
       roundRobinArray[i].completionTime = time;
@@ -207,12 +246,19 @@ const roundRobin = () => {
       count = 0;
       roundRobinArray[i].remainingTime -= time_quantum;
       processIds +=
-        '<th style="height: 60px; width: ' +
+        '<th style="height: 60px; background-color: ' +
+        roundRobinArray[i].color +
+        "; width: " +
         time_quantum * 20 +
         'px;">P' +
         roundRobinArray[i].id +
         "</th>";
-      executionTime += "<td>" + time_quantum + "</td>";
+      executionTime +=
+        "<td style='background-color: " +
+        roundRobinArray[i].color +
+        ";'>" +
+        time_quantum +
+        "</td>";
       time += time_quantum;
     }
     i++;
@@ -240,8 +286,8 @@ const priority = () => {
     return a.arrivalTime - b.arrivalTime;
   });
 
-  var processIds = "<th>Process</th>",
-    executionTime = "<th>Execution Time</th>";
+  var processIds = "<th style='background-color: #eee;'>Process</th>",
+    executionTime = "<th style='background-color: #eee;'>Execution Time</th>";
 
   for (let i = 0; i < priorityArray.length; i++) {
     if (i > 0)
@@ -250,12 +296,12 @@ const priority = () => {
     else priorityArray[0].startTime = 0;
     if (priorityArray[i].startTime < priorityArray[i].arrivalTime) {
       processIds +=
-        '<th style="height: 60px; width: ' +
-        (priorityArray[i].arrivalTime - priorityArray[i].startTime) * 20 +
+        '<th style="height: 60px; background-color: #eee; width: ' +
+        (sjfArray[i].arrivalTime - sjfArray[i].startTime) * 20 +
         'px;">Idle</th>';
       executionTime +=
-        "<td>" +
-        (priorityArray[i].arrivalTime - priorityArray[i].startTime) +
+        "<td style='background-color: #eee;'>" +
+        (sjfArray[i].arrivalTime - sjfArray[i].startTime) +
         "</td>";
       priorityArray[i].startTime = priorityArray[i].arrivalTime;
     }
@@ -268,12 +314,19 @@ const priority = () => {
       priorityArray[i].turnAroundTime + priorityArray[i].arrivalTime;
 
     processIds +=
-      '<th style="height: 60px; width: ' +
+      '<th style="height: 60px; background-color: ' +
+      priorityArray[i].color +
+      "; width: " +
       priorityArray[i].burstTime * 20 +
       'px;">P' +
       priorityArray[i].id +
       "</th>";
-    executionTime += "<td>" + priorityArray[i].burstTime + "</td>";
+    executionTime +=
+      "<td style='background-color: " +
+      priorityArray[i].color +
+      ";'>" +
+      priorityArray[i].burstTime +
+      "</td>";
   }
 
   $(".priority-div").append(
@@ -653,7 +706,8 @@ const start = (event) => {
 //   });
 // });
 
-function addRow() {
+function addRow(event) {
+  event.preventDefault();
   let currentId = processes.length;
 
   var newRow =
@@ -682,15 +736,19 @@ function addRow() {
     remainingTime: 0,
     completionTime: 0,
     turnAroundTime: 0,
+    color: random_rgba(),
   };
 
   processes.push(newProcess);
+  console.log(processes);
+  console.log(newProcess);
 
   $("#inputTable").append(newRow);
   if (processes.length > 2) $("#delete-row-button").removeAttr("disabled");
 }
 
-function deleteRow() {
+function deleteRow(event) {
+  event.preventDefault();
   var lastRow = $("#inputTable tr:last");
   lastRow.remove();
   processes.pop();
