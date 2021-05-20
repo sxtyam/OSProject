@@ -391,7 +391,6 @@ const gatherChartData = () => {
     processes: processesNames,
     suitableAlgo,
   };
-  console.log(chartData);
 };
 
 const createChart = () => {
@@ -601,12 +600,17 @@ const createChart = () => {
 
 const changeData = (event, input, id) => {
   let map = {
-    arrivalTime: 1,
-    burstTime: 2,
-    priority: 3,
-  };
+      arrivalTime: 1,
+      burstTime: 2,
+      priority: 3,
+    },
+    mn = {
+      arrivalTime: 0,
+      burstTime: 1,
+      priority: -100,
+    };
 
-  processes[id][input] = parseInt(event.target.value);
+  processes[id][input] = parseInt(Math.max(event.target.value, mn[input]));
 };
 
 const changeQuantum = (event) => {
@@ -614,6 +618,7 @@ const changeQuantum = (event) => {
 };
 
 const start = (event) => {
+  event.preventDefault();
   fcfs();
   sjf();
   roundRobin();
@@ -621,7 +626,7 @@ const start = (event) => {
   gatherChartData();
   createChart();
   $("#suitable-algo").append(chartData.suitableAlgo);
-  document.getElementById("simulate-button").style.pointerEvents = "none";
+  $("#simulate-button").attr("disabled", true);
 };
 
 // $(document).ready(function () {
@@ -654,11 +659,11 @@ function addRow() {
   var newRow =
     "<tr><td>P" +
     currentId +
-    '<td><input type="number" value=0 onchange="changeData(event, ' +
+    '<td><input type="number" min=0 value=0 onchange="changeData(event,' +
     "'arrivalTime', " +
     currentId +
     ')"></td>' +
-    '<td><input type="number" value=1 onchange="changeData(event, ' +
+    '<td><input type="number" min=1 value=1 onchange="changeData(event,' +
     "'burstTime', " +
     currentId +
     ')"></td>' +
@@ -682,23 +687,14 @@ function addRow() {
   processes.push(newProcess);
 
   $("#inputTable").append(newRow);
-
-  // var minus = $("#minus");
-  // minus.show();
-  // minus.css("top", parseFloat(minus.css("top")) + 24 + "px");
-
-  // if ($("input[name=algorithm]:checked", "#algorithm").val() != "priority")
-  //   $(".priority-only").hide();
-
-  // $("#inputTable tr:last input").change(function () {
-  //   recalculateServiceTime();
-  // });
+  if (processes.length > 2) $("#delete-row-button").removeAttr("disabled");
 }
 
 function deleteRow() {
   var lastRow = $("#inputTable tr:last");
   lastRow.remove();
   processes.pop();
+  if (processes.length <= 2) $("#delete-row-button").attr("disabled", true);
 }
 
 // // $(".initial").change(function () {
